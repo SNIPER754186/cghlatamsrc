@@ -9,109 +9,152 @@ Repositorio de instalación **ADM línea LATAM** (ChumoGH), con keygen propio po
 
 ## ⚡ Instalación Rápida (Cliente Final)
 
-Solo se entrega **1 URL + 1 KEY**. No se entregan fuentes.
+**No necesitas abrir ningún puerto.** Solo tienes que generar tu key y ejecutar 1 comando.
 
-### Opción 1 - Instalador ADM CGH (recomendado)
+### Paso 1 — Genera tu key (4 horas, 1 solo uso)
 
-```bash
-bash <(curl -sSL http://64.176.5.61:81/setup.sh) --key LatamSRC--TU_KEY_AQUI
+Abre en tu navegador o terminal:
+
+```
+https://chumoadmin.arcando.cloud/api-db.php?action=generate
 ```
 
-### Opción 2 - Instalador LATAM
+Te devolverá algo así:
 
-```bash
-bash <(curl -sSL http://64.176.5.61:81/latam.sh) --key LatamSRC--TU_KEY_AQUI
+```json
+{
+  "success": true,
+  "data": { "key": "LatamSRC--7DDCD89D4E0B2AC0", "status": "active", "ttl_hours": 4 }
+}
 ```
 
-### Modo interactivo (pide la key en pantalla)
+> Copia la key (`LatamSRC--...`). **Se quema al instalar.**
+
+### Paso 2 — Instala en tu VPS
+
+**Opción A — Instalador ADM CGH (el normal):**
+```bash
+apt update -y; apt upgrade -y
+wget -q https://chumoadmin.arcando.cloud/bash/setup.sh -O setup.sh
+chmod 777 setup.sh
+./setup.sh --key LatamSRC--TU_KEY
+```
+
+**Opción B — Instalador LATAM:**
+```bash
+apt update -y; apt upgrade -y
+wget -q https://chumoadmin.arcando.cloud/bash/latam.sh -O latam.sh
+chmod 777 latam.sh
+./latam.sh --key LatamSRC--TU_KEY
+```
+
+**Opción C — Sin parámetros (pide la key en pantalla):**
+```bash
+wget -q https://chumoadmin.arcando.cloud/bash/setup.sh -O setup.sh
+chmod 777 setup.sh
+./setup.sh
+```
+
+### Paso 3 — Abre el panel
 
 ```bash
-bash <(curl -sSL http://64.176.5.61:81/setup.sh)
+menu
 ```
 
 ---
 
-## 🔑 Generación de Keys
+## 🔑 Keygen Central (solo para el Owner)
 
-Las keys se generan **únicamente** en el VPS CyberPanel (Keygen Central):
+Los endpoints viven en tu VPS CyberPanel (`chumoadmin.arcando.cloud`):
 
-- **Generar:** `https://chumoadmin.arcando.cloud/api-db.php?action=generate`
-- **Listar:** `https://chumoadmin.arcando.cloud/api-db.php?action=list`
-- **Verificar:** `https://chumoadmin.arcando.cloud/api-db.php?action=check&key=LATAMSRC--...`
-- **Consumir:** `https://chumoadmin.arcando.cloud/api-db.php?action=consume&key=LATAMSRC--...`
+| Acción | URL |
+| :--- | :--- |
+| Generar | `https://chumoadmin.arcando.cloud/api-db.php?action=generate` |
+| Listar | `https://chumoadmin.arcando.cloud/api-db.php?action=list` |
+| Verificar | `https://chumoadmin.arcando.cloud/api-db.php?action=check&key=LATAMSRC--...` |
+| Consumir | `https://chumoadmin.arcando.cloud/api-db.php?action=consume&key=LATAMSRC--...` |
 
-**Política de cada key:**
-- Formato: `LatamSRC--XXXXXXXXXXXXXXXX`
-- Validez: **4 horas**
-- Usos: **1 solo uso** (se quema al instalar y se registra la IP que la consumió)
+**Política:** key de 4 horas, 1 solo uso, se registra la IP que la consumió.
+
+---
+
+## 📡 ¿Qué endpoints usa el instalador?
+
+Todo pasa por **HTTPS (443) saliente** hacia el dominio. **El cliente no abre nada de entrada.**
+
+| Paso | Destino | Puerto |
+| :--- | :--- | :--- |
+| Verificar key | `chumoadmin.arcando.cloud/api-db.php` | 443 saliente |
+| Descargar `pack_new` | `chumoadmin.arcando.cloud/bash/pack_new.sh` | 443 saliente |
+| Descargar módulos | `chumoadmin.arcando.cloud/bash/modules/...` | 443 saliente |
+| Panel web local | la IP del propio cliente | 81 (lo abre su nginx) |
+
+> **Por qué usar dominio y no IP:** si el keygen cambia de VPS, solo actualizas el DNS de Cloudflare. Nada en los instaladores se rompe.
+
+---
+
+## 📂 Estructura del Repositorio (ordenada)
+
+```
+cghlatamsrc/
+├── README.md              # Este manual (para el cliente)
+├── FLUJO.md               # Diagrama técnico del flujo entre scripts
+├── registrocambios.md     # Bitácora de avances
+├── bylatamsrc.html        # Landing page oficial
+│
+├── bash/                  # ★ LO QUE SE SUBE AL VPS KEYGEN
+│   ├── setup.sh           #   → instalador ADM CGH   (público)
+│   ├── latam.sh           #   → instalador LATAM      (público)
+│   ├── pack_new.sh        #   → capa 2, la llama setup.sh (interno)
+│   ├── pack3.sh           #   → capa 2 fallback        (interno)
+│   ├── menu.sh            #   → el panel final         (interno)
+│   └── styles.cpp         #   → motor msg              (interno)
+│
+└── audit/                 # ★ SOLO ANÁLISIS (no producción)
+    ├── desofuscadores/    #   herramientas Python
+    └── originales/        #   volcados sin tocar
+```
+
+**Regla:** `bash/` = producción; `audit/` = análisis.
 
 ---
 
 ## 🖥️ Servidores
 
-| Rol | IP | Dominio |
+| Rol | Dominio | Notas |
 | :--- | :--- | :--- |
-| VPS Instalador (este repo) | `64.176.5.61` | `keygen.arcando.cloud` (puerto 81) |
-| VPS Keygen Central (CyberPanel SQL) | `185.194.204.159` | `chumoadmin.arcando.cloud` |
+| Keygen Central (SQL) + `/bash/` | `chumoadmin.arcando.cloud` | VPS CyberPanel, Cloudflare proxy |
+| Repo espejo (raw) | `raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/CHUMOPLUS/mirror/` | binarios y plugins |
 
-> ⚠️ **El puerto 8888 está cerrado en el VPS instalador.** Aquí NO se genera ni se expone ningún keygen. Todo el control de licencias vive en el VPS CyberPanel.
-
----
-
-## 📦 Estructura del Repositorio
-
-```
-.
-├── README.md                       # Este archivo (manual de uso)
-├── registrocambios.md              # Bitácora de avances / dónde continuar
-├── bylatamsrc.html                 # Landing page propia (reemplaza la de Chumo)
-│
-├── _repo3/                         # Volcados limpios y desofuscados (Capa 3)
-│   ├── setup_limpio.sh             706 líneas  · instalador principal
-│   ├── menu_limpio.sh              9.466 líneas · EL MENÚ REAL
-│   ├── pack_new_limpio.sh          441 líneas  · capa 2
-│   ├── pack3_limpio.sh             454 líneas  · fallback
-│   ├── styles_limpio.sh            283 líneas  · msg-bar / estilos
-│   └── LATAM_limpio.sh             463 líneas  · variante LATAM
-│
-└── CHUMOPLUS/                      # Espejo local de archivos de runtime
-    └── mirror/                      (binarios, plugins, tokens)
-```
-
----
-
-## 🛠️ Herramientas de Auditoría (privado)
-
-En este repo **no** viven scripts Python de keygen ni paneles generadores.
-Los desofuscadores y utilidades de análisis están fuera del alcance público.
+> ⚠️ Los instaladores **no tienen IPs fijas**. Todo apunta al dominio.
 
 ---
 
 ## 📌 Identidad visual
 
-El menú instalado muestra:
+El panel instalado muestra:
 
 ```
    ______ __                 ______ __  __
   / ____// /_ __ __ ___ ___ / ____// / / /
- / /    / __// // // __ `__ \/ / __ / /_/ / 
-/ /___ / /_ / // // / / / / / /_/ // __  /  
-\____/ \__/ \_,_//_/ /_/ /_/\____//_/ /_/   
-                                            
+ / /    / __// // // __ `__ \/ / __ / /_/ /
+/ /___ / /_ / // // / / / / / /_/ // __  /
+\____/ \__/ \_,_//_/ /_/ /_/\____//_/ /_/
+
                       By LatamSRC
 ```
 
-Nombre original (`ChumoGH`) conservado por confianza, con atribución de owner debajo.
+Se conserva el nombre original (`ChumoGH`) por confianza de la comunidad, con la atribución del nuevo owner debajo.
 
 ---
 
-## 📲 Contacto / Soporte
+## 📲 Contacto
 
 - **Telegram:** `@gatesccn`
-- **Reseller activo:** configurable por el campo `creator` de cada key en el keygen SQL
+- **Reseller:** configurable por el campo `creator` de cada key en el keygen SQL
 
 ---
 
 ## ⚠️ Aviso legal
 
-Material de instalación de servidores SSH/VPN (ADM). El creador original del script es Henry Chumo (`@ChumoGH`); este fork mantiene atribución y añade gestión de licencias propia.
+Material de instalación de servidores SSH/VPN (ADM). Creador original: Henry Chumo (`@ChumoGH`). Este fork mantiene atribución y añade gestión de licencias propia.

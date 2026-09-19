@@ -50,3 +50,46 @@ bash <(curl -sSL http://64.176.5.61:81/setup.sh) --key LatamSRC--XXXX
 - Consumir:`https://chumoadmin.arcando.cloud/api-db.php?action=consume&key=LATAMSRC--...`
 
 Política: key de 4h, 1 solo uso, IP consumida registrada en `used_by_ip`.
+
+---
+
+## SESIÓN 19/09/2026 (tarde) — Reestructuración Anti-IP-Fija
+
+### Problema detectado
+Los instaladores apuntaban a `http://64.176.5.61:81/...` y a `185.194.204.159`.
+Si cambiaba de VPS, **todas las instalaciones del mundo se rompían.**
+
+### Solución aplicada
+- [x] **TODAS las IPs fijas eliminadas** de los 4 scripts de producción.
+- [x] **Todo apunta al dominio** `https://chumoadmin.arcando.cloud/...` (Cloudflare proxy).
+- [x] **Creada carpeta limpia `bash/`** con SOLO los 6 scripts de producción:
+  - `setup.sh`, `latam.sh` (públicos)
+  - `pack_new.sh`, `pack3.sh`, `menu.sh`, `styles.cpp` (internos)
+- [x] **Creada carpeta `audit/`** para herramientas Python de análisis.
+- [x] **`setup.sh` y `latam.sh`:** eliminado el bloque "GENERADOR NO AUTORIZADO" (la validación real la hace `api-db.php`). Ya no hay IP de generador hardcodeada.
+- [x] **`IiP` ahora es la IP LOCAL del cliente:** usa `hostname -I | awk '{print $1}'` con fallback a `ifconfig.me`. Nunca hardcodeada.
+- [x] **Parser universal de argumentos** en ambos instaladores: acepta `--key`, `-k`, `--Latam`, `--latam`, `--ADMcgh`, y key suelta (`LatamSRC--...`).
+- [x] **`pack_new.sh`/`pack3.sh`:** rutas de terceros (`ChumoGH/ADMcgh`, `plus.ltmcgh.site`, Dropbox) → mirror propio del repo o keygen propio.
+- [x] **README.md reescrito:** comandos con `wget` al dominio, sin IPs.
+- [x] **FLUJO.md creado:** diagrama de qué script llama a cuál.
+
+### Nuevos comandos de instalación (cliente)
+```bash
+# ADM CGH
+apt update -y; apt upgrade -y
+wget -q https://chumoadmin.arcando.cloud/bash/setup.sh -O setup.sh
+chmod 777 setup.sh && ./setup.sh --key LatamSRC--XXXX
+
+# LATAM
+apt update -y; apt upgrade -y
+wget -q https://chumoadmin.arcando.cloud/bash/latam.sh -O latam.sh
+chmod 777 latam.sh && ./latam.sh --key LatamSRC--XXXX
+```
+
+### Puertos que necesita el CLIENTE
+**NINGUNO de entrada.** Solo salida HTTPS (443) hacia el dominio del keygen.
+
+### PENDIENTE para la próxima sesión
+1. Subir la carpeta `bash/` al VPS CyberPanel en `/bash/`.
+2. Borrar las carpetas viejas del repo GitHub: `_repo3/`, `2_CODIGOANALIZADO/`, `3_CODIGOVOLCADOFINAL/`, `1_CODIGOORIGINAL/` (ya migradas a `bash/` y `audit/`).
+3. Probar la instalación real de `latam.sh` end-to-end.
