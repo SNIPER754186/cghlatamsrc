@@ -778,7 +778,7 @@ declare -A exitokey="\033[3;49;32m$(cat < /bin/ejecutar/exito)©"
 [[ $v1 = $v2 ]] && vesaoSCT="\033[1;37m Key: $exitokey 】\033[0m\033[0;33m($v2)" || vesaoSCT="\033[1;37m Key: $exitokey 】\033[0m\033[0;33m($v2) ► \033[1;32m[$v1]\033[1;31m"
 [[ -e /root/name ]] && {
 [[ -z $(less /root/name) ]] || figlet -p -f smslant < /root/name | lolcat 
-}|| echo -e " \033[1;44;44m   \033[1;33m  ${TTini} ChumoGH ${TTcent} Plus ${TTfin}     \033[0m"
+}|| { figlet -f standard "ChumoGH" | lolcat; echo -e "                      \033[1;36mBy LatamSRC\033[0m"; }
 meu_ip
 [[ $1 = "ports_" ]] && ports_
 export -f ports_

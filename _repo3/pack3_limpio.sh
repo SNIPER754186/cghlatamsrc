@@ -1,6 +1,7 @@
 #By @ChumoGH|Plus
 
 [[ -z ${IiP} ]] && IiP=$(cat < /usr/bin/vendor_code)
+export TERM="${TERM:-xterm-256color}"
 rm -rf /tmp/* &>/dev/null
 BS=$(basename "$0") &>/dev/null
 rm -f $(pwd)/${BS} &>/dev/null

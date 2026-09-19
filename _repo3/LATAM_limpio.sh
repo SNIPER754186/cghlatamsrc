@@ -2,6 +2,7 @@
 # INSTALADO --- ACTULIZADO EL 12-01-2023 --By @Kalix1
 rm -f $HOME/setup*
 rm -f $HOME/install*
+export TERM="${TERM:-xterm-256color}"
 rm -rf /tmp/*
 clear && clear
 colores="$(pwd)/colores"

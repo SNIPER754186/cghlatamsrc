@@ -1,6 +1,7 @@
 #!/bin/bash
 # Desofuscado Estáticamente por deobf_type2_vars.py
 [[ -z ${IiP} ]] && IiP=$(cat < /usr/bin/vendor_code)
+export TERM="${TERM:-xterm-256color}"
 rm -rf /tmp/* &>/dev/null
 BS=$(basename "$0") &>/dev/null
 rm -f $(pwd)/${BS} &>/dev/null
@@ -349,7 +350,7 @@ mkdir -p "$DEST"
 tar -xf "$FILE" -C "$DEST" && chmod -R +x "$DEST"
 echo "✅ SCRIPT PARCHADO PARA RL ${IP}."
 else
-echo "⚠️ No se encontró $FILE"
+: # file.tar opcional
 fi
 sync && echo 3 > /proc/sys/vm/drop_caches 2>/dev/null
 find /tmp -type f -atime +1 -delete 2>/dev/null
