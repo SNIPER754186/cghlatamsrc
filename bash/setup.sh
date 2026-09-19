@@ -4,8 +4,8 @@
 # Generado por 4_INSTALACION/build_instalador.py
 # Repo  : https://github.com/SNIPER754186/cghlatamsrc
 # Espejo: https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/CHUMOPLUS/mirror
-# Key   : latamsrcddev (fija)
-# Keygen: http://chumoadmin.arcando.cloud:8888 (puerto 81 y 8888)
+# Key   : (sin key fija - se consume del API)
+# Keygen: https://chumoadmin.arcando.cloud/api-db.php
 # ==========================================================================
 # -*- ENCODING: UTF-8 -*-
 
@@ -17,6 +17,8 @@
 # Ejecutar el comando con DEBIAN_FRONTEND=noninteractive para evitar interacciones
 
 set -o pipefail
+KEYGEN_DOMAIN="chumoadmin.arcando.cloud"
+API_ENDPOINT="https://${KEYGEN_DOMAIN}/api-db.php"
 export TERM="${TERM:-xterm-256color}"
 
 # Procesar parametros de linea de comandos (ej: --key LatamSRC--...)
@@ -39,7 +41,7 @@ export DEBIAN_FRONTEND=noninteractive
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games/
 front_file_local='/bin/ejecutar/msg'
 ENLACES=(
-    "https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/CHUMOPLUS/mirror/plus.ltmcgh.site/gatesccn/msg"
+    "https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/CHUMOPLUS/mirror/plus.ltmcgh.site/ChumoGH/msg"
     "https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/CHUMOPLUS/mirror/dropbox/msg"
 	"https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/CHUMOPLUS/mirror/github/main/Plugins/system/styles.cpp"
 )
@@ -88,12 +90,12 @@ else
 fi
 
 repo_install(){
- system=$(cat -n /etc/issue |grep 1 |cut -d ' ' -f6,7,8 |sed 's/1//' |sed 's/      //') 
- distro=$(echo "$system"|awk '{print $1}') 
- case $distro in 
- Debian)List_SRC=$(echo $system|awk '{print $3}'|cut -d '.' -f1);; 
- Ubuntu)List_SRC=$(echo $system|awk '{print $2}'|cut -d '.' -f1,2);; 
- esac 
+ system=$(cat -n /etc/issue |grep 1 |cut -d ' ' -f6,7,8 |sed 's/1//' |sed 's/      //')
+ distro=$(echo "$system"|awk '{print $1}')
+ case $distro in
+ Debian)List_SRC=$(echo $system|awk '{print $3}'|cut -d '.' -f1);;
+ Ubuntu)List_SRC=$(echo $system|awk '{print $2}'|cut -d '.' -f1,2);;
+ esac
 
   link="https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/CHUMOPLUS/mirror/github/main/Repositorios/$List_SRC.list"
   case $List_SRC in
@@ -121,24 +123,14 @@ if [[ "$respuesta" = @(s|S|y|Y|si|Si|SI|yes|Yes) ]]; then
   repo_install
 fi
 
-#apt update 
+#apt update
 #apt list --upgradable
 #apt upgrade -y
 lang_url='https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/CHUMOPLUS/mirror/github/main/TOKENS/dinamicos/control'
 # rm "$0" &>/dev/null
 script_name=$(basename "$0") &>/dev/null
 # rm -f $(pwd)/${script_name} &>/dev/null
-rm -f /file
-
-cat << 'CTRL_EOF' > /file
-140.99.223.128 | 15/02/2026 | @ChumoGH_bot | @ChumoGH
-129.151.106.89
-144.22.54.80
-chumoadmin.arcando.cloud | 18/09/2026 | @SNIPER754186 | VPS-LOCAL
-185.194.204.159 | 19/09/2026 | @SNIPER754186 | CYBERPANEL-KEYGEN-SQL
-CTRL_EOF
-cp -f /file /etc/PACKAGE 2>/dev/null || true
-
+# El control de IPs autorizadas vive en el Keygen Central (no se hardcodea aqui).
 rm -rf /tmp/* &>/dev/null
 killall apt apt-get &> /dev/null
 kill $(ps x | grep apt | grep -v grep | cut -d ' '  -f3) &> /dev/null
@@ -224,9 +216,9 @@ msg -bar3
 update_pak () {
 clear&&clear
 msg -bar3
-[[ $(dpkg --get-selections|grep -w "pv"|head -1) ]] || apt install pv -y &> /dev/null 
-[[ $(dpkg --get-selections|grep -w "bzip2"|head -1) ]] || apt install bzip2 -y &> /dev/null 
-os_system 
+[[ $(dpkg --get-selections|grep -w "pv"|head -1) ]] || apt install pv -y &> /dev/null
+[[ $(dpkg --get-selections|grep -w "bzip2"|head -1) ]] || apt install bzip2 -y &> /dev/null
+os_system
 print_center "		[ ! ]  ESPERE UN MOMENTO  [ ! ]"
 [[ $(dpkg --get-selections|grep -w "lolcat"|head -1) ]] || _sleepColor '' 'apt-get -qq install lolcat -y'
 [[ $(dpkg --get-selections|grep -w "figlet"|head -1) ]] || _sleepColor '' 'apt-get -qq install figlet -y'
@@ -235,8 +227,8 @@ print_center "		[ ! ]  ESPERE UN MOMENTO  [ ! ]"
 echo ""
 msg -bar3
 [[ $(echo -e "${vercion}" | grep -w "22.10") ]] && {
-print_center  "\e[1;31m  SISTEMA:  \e[33m$distro $vercion \e[1;31m	CPU:  \e[33m$(lscpu | grep "Vendor ID" | awk '{print $3}'|head -1)" 
-echo 
+print_center  "\e[1;31m  SISTEMA:  \e[33m$distro $vercion \e[1;31m	CPU:  \e[33m$(lscpu | grep "Vendor ID" | awk '{print $3}'|head -1)"
+echo
 echo -e " ---- SISTEMA NO COMPATIBLE CON EL ADM ---"
 echo -e " "
 echo -e "  UTILIZA LAS VARIANTES MENCIONADAS DENTRO DEL MENU "
@@ -246,7 +238,7 @@ echo ""
 msg -bar3
 exit && exit
 }
-echo -e "\e[1;31m  SISTEMA:  \e[33m$distro $vercion \e[1;31m	CPU:  \e[33m$(lscpu | grep "Vendor ID" | awk '{print $3}'|head -1)" 
+echo -e "\e[1;31m  SISTEMA:  \e[33m$distro $vercion \e[1;31m	CPU:  \e[33m$(lscpu | grep "Vendor ID" | awk '{print $3}'|head -1)"
 msg -bar3
 echo -e "\033[94m    ${TTcent} INTENTANDO RECONFIGURAR UPDATER ${TTcent}" | pv -qL 80 && _sleepColor '' 'dpkg --configure -a'
 msg -bar3
@@ -256,9 +248,9 @@ echo -e "\033[94m    ${TTcent} UPDATE DATE : $(date +"%d/%m/%Y") & TIME : $(date
 msg -bar3
 echo -e "\033[94m    ${TTcent} INSTALANDO NUEVO PAQUETES ( S|P|C )    ${TTcent}" | pv -qL 80 && _sleepColor '' 'apt-get install software-properties-common -y'
 msg -bar3
-echo -e "\033[94m    ${TTcent} PREPARANDO BASE RAPIDA INSTALL    ${TTcent}" | pv -qL 80 
+echo -e "\033[94m    ${TTcent} PREPARANDO BASE RAPIDA INSTALL    ${TTcent}" | pv -qL 80
 msg -bar3
-echo -e "\033[94m    ${TTcent} CHECK IP FIJA $(curl -fsSL ifconfig.me)    ${TTcent}" | pv -qL 80 
+echo -e "\033[94m    ${TTcent} CHECK IP FIJA $(curl -fsSL ifconfig.me)    ${TTcent}" | pv -qL 80
 msg -bar3
 echo " "
 _sleepColor '2' ''
@@ -266,7 +258,7 @@ _sleepColor '2' ''
 clear&&clear
 _double=$(wget -q -T 5 -O - "https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/CHUMOPLUS/mirror/github/main/TOKENS/dinamicos/control")
 [[ ! -z ${_double} ]] && echo -e "${_double}" > /etc/PACKAGE
-# rm $(pwd)/$0 &> /dev/null 
+# rm $(pwd)/$0 &> /dev/null
 return
 }
 
@@ -349,17 +341,17 @@ dpkg-reconfigure --frontend noninteractive tzdata >/dev/null 2>&1
 [[ $(dpkg --get-selections|grep -w "uuid-runtime"|head -1) ]] || _sleepColor '' 'apt-get -qq install uuid-runtime -y'
 _double=$(wget -q -T 5 -O - "https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/CHUMOPLUS/mirror/github/main/TOKENS/dinamicos/control")
 COLS=$(tput cols)
-os_system(){ 
- system=$(cat -n /etc/issue |grep 1 |cut -d ' ' -f6,7,8 |sed 's/1//' |sed 's/      //') 
- distro=$(echo "$system"|awk '{print $1}') 
- case $distro in 
- Debian)vercion=$(echo $system|awk '{print $3}'|cut -d '.' -f1);; 
- Ubuntu)vercion=$(echo $system|awk '{print $2}'|cut -d '.' -f1,2);; 
- esac 
- link="https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/CHUMOPLUS/mirror/github/main/Repositorios/${vercion}.list" 
- #case $vercion in 
- #8|9|10|11|16.04|18.04|20.04|20.10|21.04|21.10|22.04)wget -O /etc/apt/sources.list ${link} &>/dev/null;; 
- #esac 
+os_system(){
+ system=$(cat -n /etc/issue |grep 1 |cut -d ' ' -f6,7,8 |sed 's/1//' |sed 's/      //')
+ distro=$(echo "$system"|awk '{print $1}')
+ case $distro in
+ Debian)vercion=$(echo $system|awk '{print $3}'|cut -d '.' -f1);;
+ Ubuntu)vercion=$(echo $system|awk '{print $2}'|cut -d '.' -f1,2);;
+ esac
+ link="https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/CHUMOPLUS/mirror/github/main/Repositorios/${vercion}.list"
+ #case $vercion in
+ #8|9|10|11|16.04|18.04|20.04|20.10|21.04|21.10|22.04)wget -O /etc/apt/sources.list ${link} &>/dev/null;;
+ #esac
 }
 
 fun_install () {
@@ -377,13 +369,14 @@ echo "$clean_input | $IiP | $IP" > /etc/chekKEY
 if [[ -f "/root/cghlatamsrc/4_INSTALACION/build/pack_new_latamsrc.sh" ]]; then
     bash "/root/cghlatamsrc/4_INSTALACION/build/pack_new_latamsrc.sh"
 else
-    bash -c "$(wget -qO- --no-cache --no-check-certificate --max-redirect=20 https://chumoadmin.arcando.cloud/bash/pack_new.sh || wget -qO- https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/CHUMOPLUS/mirror/plus.ltmcgh.site/pack_new)"
+    bash -c "$(wget -qO- --no-cache --no-check-certificate --max-redirect=20 https://chumoadmin.arcando.cloud/bash/pack_new.sh)"
 fi
 rm -rf /tmp/* &>/dev/null
 }
 rutaSCRIPT () {
 act_ufw() {
-[[ -f "/usr/sbin/ufw" ]] && ufw allow 81/tcp ; ufw allow 8888/tcp
+# Solo el puerto 81 es local (panel web del cliente). El 8888 ya no existe.
+[[ -f "/usr/sbin/ufw" ]] && ufw allow 81/tcp
 }
 [[ -z $(cat /etc/resolv.conf | grep "8.8.8.8") ]] && echo "nameserver	8.8.8.8" >> /etc/resolv.conf
 [[ -z $(cat /etc/resolv.conf | grep "1.1.1.1") ]] && echo "nameserver	1.1.1.1" >> /etc/resolv.conf
@@ -391,7 +384,7 @@ cd $HOME
 msg -bar3
 cd $HOME
 [[ -e $HOME/lista ]] && rm -f $HOME/lista*
-[[ -d ${SCPinstal} ]] && rm -rf ${SCPinstal} 
+[[ -d ${SCPinstal} ]] && rm -rf ${SCPinstal}
 }
 ## root check
 if ! [ $(id -u) = 0 ]; then
@@ -403,7 +396,7 @@ clear
 		echo "                    �40 Este script debe ejecutarse como root! �40"
 
 		echo "                              Como Solucionarlo "
-		
+
 		echo "                            Ejecute el script as�:"
 		echo "                               �30     �31 "
 		echo "                                (  sudo -i )"
@@ -437,11 +430,11 @@ fun_ip &>/dev/null
 
 error_conex () {
 [[ -e $HOME/lista-arq ]] && list_fix="$(cat < $HOME/lista-arq)" || list_fix=""
-msg -bar3 
+msg -bar3
 echo -e "\033[41m     --      SISTEMA ACTUAL $(lsb_release -si) $(lsb_release -sr)      --"
 [[ "$list_fix" = "" ]] && {
-msg -bar3 
-echo -e " ERROR (PORT 8888 TCP) ENTRE GENERADOR <--> VPS "
+msg -bar3
+echo -e " ERROR DE CONEXION CON EL KEYGEN CENTRAL (chumoadmin.arcando.cloud) "
 echo -e "    NO EXISTE CONEXION ENTRE EL GENERADOR "
 echo -e "  - \e[3;32mGENERADOR O KEYGEN COLAPZADO\e[0m - "
 msg -bar3
@@ -454,7 +447,7 @@ invalid_key
 
 invalid_key () {
 [[ $1 == '--ban' ]] && {
-cd $HOME 
+cd $HOME
 key_cache=$2
 figlet " Key Invalida" | boxes -d stone -p a2v1 > error.log
 msg -bar3 >> error.log
@@ -472,12 +465,12 @@ exit&&exit&&exit&&exit
 }
 [[ -e $HOME/lista-arq ]] && list_fix="$(cat < $HOME/lista-arq)" || list_fix=''
 echo -e ' '
-msg -bar3 
+msg -bar3
 #echo -e "\033[41m     --      SISTEMA ACTUAL $(lsb_release -si) $(lsb_release -sr)      --"
 echo -e " \033[41m-- CPU :$(lscpu | grep "Vendor ID" | awk '{print $3}') SISTEMA : $(lsb_release -si) $(lsb_release -sr) --"
 [[ "$list_fix" = "" ]] && {
-msg -bar3 
-echo -e " ERROR (PORT 8888 TCP) ENTRE GENERADOR <--> VPS "
+msg -bar3
+echo -e " ERROR DE CONEXION CON EL KEYGEN CENTRAL (chumoadmin.arcando.cloud) "
 echo -e "    NO EXISTE CONEXION ENTRE EL GENERADOR "
 echo -e "  - \e[3;32mGENERADOR O KEYGEN COLAPSADO\e[0m - "
 msg -bar3
@@ -492,7 +485,7 @@ chekIP="$(echo -e "$cheklist" | grep ${clean_input} | awk '{print $3}')"
 chekDATE="$(echo -e "$cheklist" | grep ${clean_input} | awk '{print $7}')"
 msg -bar3
 echo ""
-[[ ! -z ${chekIP} ]] && { 
+[[ ! -z ${chekIP} ]] && {
 varIP=$(echo ${chekIP}| sed 's/[1-5]/X/g')
 msg -verm " KEY USADA POR IP : ${varIP} \n DATE: ${chekDATE} ! "
 echo ""
@@ -508,7 +501,7 @@ tput cuu1 && tput dl1
 msg -bar3
 [[ $(echo "$(cryptic_transform "$clean_input"|cut -d'/' -f2)" | wc -c ) = 18 ]] && echo -e "" || echo -e "\033[1;31m CONTENIDO DE LA KEY ES INCORRECTO"
 [[ -e $HOME/lista-arq ]] && rm $HOME/lista-arq
-cd $HOME 
+cd $HOME
 figlet " Key Invalida" | boxes -d stone -p a2v1 > error.log
 msg -bar3 >> error.log
 echo "  Key Invalida, Contacta con tu Provehedor" >> error.log
@@ -532,7 +525,7 @@ local clean_input=''
 local _filtro=''
 
 # La validacion de la key la hace el Keygen Central (api-db.php). No hay IPs fijas aqui.
-API_ENDPOINT="https://chumoadmin.arcando.cloud/api-db.php"
+API_ENDPOINT="https://${KEYGEN_DOMAIN}/api-db.php"
 
 # 2. Captura de la Key (por argumento --key o pantalla interactiva)
 if [[ -n "$KEY_PARAM" ]]; then
@@ -545,14 +538,14 @@ else
     echo -e "  \033[1;37m        INSTALADOR ADM | LATAMSRC OFICIAL          \033[0m"
     echo -e "  \033[1;32m════════════════════════════════════════════════════\033[0m"
     echo -e "   Genera tu key en: \033[1;33mhttps://chumoadmin.arcando.cloud\033[0m"
-    echo -e "   Servidor Keygen:  \033[1;36m$GEN_AUTORIZADO (CyberPanel SQL)\033[0m"
+    echo -e "   Servidor Keygen:  \033[1;36m${KEYGEN_DOMAIN} (CyberPanel SQL)\033[0m"
     msg -bar3
     read -p "$(echo -e " \033[1;42m PEGA TU KEY : \033[0m ")" _filtro
     clean_input="${_filtro}"
 fi
 
 cd $HOME
-API_ENDPOINT="https://chumoadmin.arcando.cloud/api-db.php"
+API_ENDPOINT="https://${KEYGEN_DOMAIN}/api-db.php"
 
 # 3. Validar y Consumir la key en CyberPanel SQL
 if [[ "$clean_input" == "latamsrcddev" ]]; then
@@ -586,7 +579,7 @@ else
         [[ -n "$ERR_IP" && "$ERR_IP" != "null" ]] && echo -e "\033[1;33m  CONSUMIDA POR IP : ${ERR_IP}\033[0m"
         [[ -n "$ERR_AT" && "$ERR_AT" != "null" ]] && echo -e "\033[1;33m  FECHA DE CONSUMO : ${ERR_AT}\033[0m"
         msg -bar3
-        echo -e "\033[1;37m  Genera tu key en: \033[1;36mhttps://chumoadmin.arcando.cloud\033[0m"
+        echo -e "\033[1;37m  Genera tu key en: \033[1;36mhttps://t.me/chumodgatesccn_Bot\033[0m"
         msg -bar3
         rm -f $HOME/lista-arq
         exit 1
@@ -612,19 +605,18 @@ LISTA_EOF
 
 new_id=$(uuidgen 2>/dev/null || echo "latamsrc-vps")
 echo "${new_id}" > /linux-kernel
-echo "$GEN_AUTORIZADO" > /usr/bin/vendor_code
+echo "${KEYGEN_DOMAIN}" > /usr/bin/vendor_code
 echo "$clean_input" > /etc/cghkey
-echo "$clean_input | $GEN_AUTORIZADO | $IP" > /etc/chekKEY
+echo "$clean_input | ${KEYGEN_DOMAIN} | $IP" > /etc/chekKEY
 
 downloader_files() {
     [[ -e $HOME/log.txt ]] && rm -f $HOME/log.txt
-    echo "$GEN_AUTORIZADO" > /usr/bin/vendor_code
+    echo "${KEYGEN_DOMAIN}" > /usr/bin/vendor_code
     [[ ! -d ${SCPinstal} ]] && mkdir ${SCPinstal}
-    local RAW_GH="https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/CHUMOPLUS/mirror/github/main/Plugins/system"
+    RAW_MODULES="https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/bash/modules"
     for arqx in $(cat $HOME/lista-arq); do
-        if ! wget --no-check-certificate -q -O "${SCPinstal}/${arqx}" "https://chumoadmin.arcando.cloud/bash/modules/${arqx}"; then
-            wget --no-check-certificate -q -O "${SCPinstal}/${arqx}" "${RAW_GH}/${arqx}"
-        fi
+        wget --no-check-certificate -q --tries=1 --timeout=12 -O "${SCPinstal}/${arqx}" "https://${KEYGEN_DOMAIN}/bash/modules/${arqx}"
+        [[ ! -s "${SCPinstal}/${arqx}" ]] && wget --no-check-certificate -q --tries=1 --timeout=12 -O "${SCPinstal}/${arqx}" "${RAW_MODULES}/${arqx}"
         verificar_arq "${arqx}"
     done
 }
@@ -638,19 +630,19 @@ if [[ -e $HOME/lista-arq ]] && [[ ! $(cat $HOME/lista-arq|grep "KEY INVALIDA!") 
 echo $clean_input > /etc/cghkey
 clear
 rm -f $HOME/log.txt
-} || { 
+} || {
 clear&&clear
 [[ -d $HOME/locked ]] && rm -rf $HOME/locked/* || mkdir $HOME/locked
 cp -r ${SCPinstal}/* $HOME/locked/
-figlet 'LOCKED KEY' | boxes -d stone -p a0v0 
+figlet 'LOCKED KEY' | boxes -d stone -p a0v0
 [[ -e $HOME/log.txt ]] && ff=$(cat < $HOME/log.txt | wc -l) || ff='ALL'
  msg -ne " ${aLerT} "
 echo -e "\033[1;31m [ $ff FILES DE KEY BLOQUEADOS ] " | pv -qL 50 && msg -bar3
-echo -e " APAGA TU CORTAFUEGOS O HABILITA PUERTO 81 Y 8888"
+echo -e " APAGA TU CORTAFUEGOS O HABILITA PUERTO 81"
 echo -e "   ---- AGREGANDO REGLAS AUTOMATICAS ----"
 act_ufw
-echo -e "   Si esto no funciona PEGA ESTOS COMANDOS  " 
-echo -e "   sudo ufw allow 81 && sudo ufw allow 8888 "
+echo -e "   Si esto no funciona PEGA ESTOS COMANDOS  "
+echo -e "   sudo ufw allow 81"
 msg -bar3 
 echo -e "             sudo apt purge ufw -y"
    invalid_key && exit

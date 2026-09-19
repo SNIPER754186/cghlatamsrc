@@ -13,22 +13,11 @@ Repositorio de instalación **ADM línea LATAM** (ChumoGH), con keygen propio po
 
 ### Paso 1 — Genera tu key (4 horas, 1 solo uso)
 
-Abre en tu navegador o terminal:
+Contacta a **@gatesccn** en Telegram (`https://t.me/gatesccn`) y solicita tu key.
 
-```
-https://chumoadmin.arcando.cloud/api-db.php?action=generate
-```
+Te entregarán una key con formato `LatamSRC--XXXXXXXXXXXXXXXX` válida por **4 horas**.
 
-Te devolverá algo así:
-
-```json
-{
-  "success": true,
-  "data": { "key": "LatamSRC--7DDCD89D4E0B2AC0", "status": "active", "ttl_hours": 4 }
-}
-```
-
-> Copia la key (`LatamSRC--...`). **Se quema al instalar.**
+> **Se quema al instalar.** Cada key sirve para 1 sola VPS.
 
 ### Paso 2 — Instala en tu VPS
 
@@ -63,20 +52,12 @@ menu
 
 ---
 
-## 🔑 Keygen Central (solo para el Owner)
+## 🔑 Keygen Central
 
-Los endpoints viven en tu VPS CyberPanel (`chumoadmin.arcando.cloud`):
+Las keys se generan desde el **panel privado del Owner** en el VPS CyberPanel.
+Los endpoints del API **no son públicos** por seguridad.
 
-| Acción | URL |
-| :--- | :--- |
-| Generar | `https://chumoadmin.arcando.cloud/api-db.php?action=generate` |
-| Listar | `https://chumoadmin.arcando.cloud/api-db.php?action=list` |
-| Verificar | `https://chumoadmin.arcando.cloud/api-db.php?action=check&key=LATAMSRC--...` |
-| Consumir | `https://chumoadmin.arcando.cloud/api-db.php?action=consume&key=LATAMSRC--...` |
-
-**Política:** key de 4 horas, 1 solo uso, se registra la IP que la consumió.
-
----
+Contacta a `@gatesccn` en Telegram para obtener tu key.
 
 ## 📡 ¿Qué endpoints usa el instalador?
 
@@ -84,7 +65,7 @@ Todo pasa por **HTTPS (443) saliente** hacia el dominio. **El cliente no abre na
 
 | Paso | Destino | Puerto |
 | :--- | :--- | :--- |
-| Verificar key | `chumoadmin.arcando.cloud/api-db.php` | 443 saliente |
+| Verificar key | `chumoadmin.arcando.cloud` | 443 saliente |
 | Descargar `pack_new` | `chumoadmin.arcando.cloud/bash/pack_new.sh` | 443 saliente |
 | Descargar módulos | `chumoadmin.arcando.cloud/bash/modules/...` | 443 saliente |
 | Panel web local | la IP del propio cliente | 81 (lo abre su nginx) |

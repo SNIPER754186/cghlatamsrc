@@ -39,8 +39,8 @@ clear
 echo -e "\033[1;34m════════════════════════════════════════════════════\033[0m"
 echo -e "\033[1;37m        INSTALADOR ADM | VARIANTE LATAM-NETVPS      \033[0m"
 echo -e "\033[1;34m════════════════════════════════════════════════════\033[0m"
-echo -e " Genera tu key en: \033[1;33mhttps://chumoadmin.arcando.cloud\033[0m"
-echo -e " Servidor Keygen:  \033[1;36m$GEN_AUTORIZADO (CyberPanel SQL)\033[0m"
+echo -e "\033[1;37m  Genera tu key en: \033[1;36mhttps://t.me/chumodgatesccn_Bot\033[0m"
+echo -e " Servidor Keygen:  \033[1;36mchumoadmin.arcando.cloud (CyberPanel SQL)\033[0m"
 echo -e "\033[1;34m────────────────────────────────────────────────────\033[0m"
 
 clean_input="$KEY_PARAM"
@@ -92,10 +92,7 @@ mkdir -p ${SCPdir} ${SCPinstal} /bin/ejecutar
 # Guardar llaves y vendedor
 echo "$clean_input" > ${SCPdir}/key.txt
 echo "$clean_input" > /etc/cghkey
-echo "$KEY_CREATOR" > ${SCPdir}/menu_credito
-echo "$KEY_CREATOR" > /bin/ejecutar/menu_credito
-echo "$GEN_AUTORIZADO" > /usr/bin/vendor_code
-echo "$clean_input | $GEN_AUTORIZADO | $(curl -fsSL ifconfig.me)" > /etc/chekKEY
+echo "$clean_input | chumoadmin.arcando.cloud | $(hostname -I 2>/dev/null | awk '{print $1}')" > /etc/chekKEY
 
 # 7. Descargar modulos
 echo -e "\n\033[1;33m [*] Descargando modulos del sistema LATAM...\033[0m"
@@ -115,19 +112,24 @@ PPriv.py
 PPub.py
 LISTA_EOF
 
-RAW_GH="https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/CHUMOPLUS/mirror/github/main/Plugins/system"
+RAW_MODULES="https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/bash/modules"
 for arqx in $(cat $HOME/lista-arq); do
-    if ! wget --no-check-certificate -q -O "${SCPdir}/${arqx}" "https://chumoadmin.arcando.cloud/bash/modules/${arqx}"; then
-        wget --no-check-certificate -q -O "${SCPdir}/${arqx}" "${RAW_GH}/${arqx}"
-    fi
-    chmod +x "${SCPdir}/${arqx}"
+    # CyberPanel primero (si existe /bash/modules/) y si no, GitHub raw del repo
+    wget --no-check-certificate -q --tries=1 --timeout=12 -O "${SCPdir}/${arqx}" "https://${KEYGEN_DOMAIN:-chumoadmin.arcando.cloud}/bash/modules/${arqx}"
+    [[ ! -s "${SCPdir}/${arqx}" ]] && wget --no-check-certificate -q --tries=1 --timeout=12 -O "${SCPdir}/${arqx}" "${RAW_MODULES}/${arqx}"
+    chmod +x "${SCPdir}/${arqx}" 2>/dev/null || true
 done
+
+# Escribir creditos/llaves DESPUES de bajar modulos (para que no los pisen)
+echo "$KEY_CREATOR" > ${SCPdir}/menu_credito
+echo "$KEY_CREATOR" > /bin/ejecutar/menu_credito
+echo "chumoadmin.arcando.cloud" > /usr/bin/vendor_code
 rm -f $HOME/lista-arq
 
 # 8. Wrappers ejecutables de menu
 cat << 'WRAP_EOF' > /usr/bin/menu
 #!/bin/bash
-cd /etc/SCRIPT-LATAM && ./menu
+cd /etc/SCRIPT-LATAM && ./menu.sh
 WRAP_EOF
 chmod +x /usr/bin/menu
 cp -f /usr/bin/menu /usr/bin/MENU
