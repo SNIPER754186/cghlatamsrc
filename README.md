@@ -29,13 +29,14 @@ chmod 777 setup.sh
 ./setup.sh --key LatamSRC--TU_KEY
 ```
 
-**Opción B — Instalador LATAM:**
+**Opción B — Instalador LATAM (variante NetVPS):**
 ```bash
 apt update -y; apt upgrade -y
-wget -q https://chumoadmin.arcando.cloud/bash/latam.sh -O latam.sh
-chmod 777 latam.sh
-./latam.sh --key LatamSRC--TU_KEY
+wget -q https://chumoadmin.arcando.cloud/bash/latam.sh -O /usr/bin/LATAM
+chmod +x /usr/bin/LATAM
+LATAM --key LatamSRC--TU_KEY
 ```
+> También funciona interactivo: `LATAM` (sin `--key`) y pegas la key cuando la pida.
 
 **Opción C — Sin parámetros (pide la key en pantalla):**
 ```bash

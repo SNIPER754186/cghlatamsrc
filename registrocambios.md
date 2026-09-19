@@ -119,3 +119,55 @@ cghlatamsrc/
 ├── CHUMOPLUS/             ← espejo raw (binarios/plugins)
 └── _repo3/                ← volcados originales (pendiente borrar)
 ```
+
+---
+
+## SESIÓN 19/09/2026 (noche) — Consolidación Total + Pruebas Reales
+
+### PROBLEMA RAÍZ: 3 copias del mismo código
+| Ubicación | Estado | Destino |
+|---|---|---|
+| `/root/CHUMOPLUS/` | Original de Chumo (referencia) | mirror se sincroniza aquí |
+| `/root/cghlatamsrc/CHUMOPLUS/` | Edición vieja con IPs | Consolidada |
+| `/root/cghlatamsrc/_repo3/` | La más nueva | → movida a `bash/` |
+
+### CONSOLIDACIÓN HECHA
+- [x] **Eliminados duplicados:** `_repo3/`, `2_CODIGOANALIZADO/`, `4_INSTALACION/`
+- [x] **Estructura final:** `bash/` (prod) + `CHUMOPLUS/` (datos) + `audit/` (análisis)
+- [x] **Control unificado:** `185.194.204.159 | @chumodgatesccn_Bot | @gatesccn` en ambos control
+- [x] **Ruta mirror correcta:** `CHUMOPLUS/mirror/...` (14/14 rutas → 200 OK)
+
+### BUGS REALES ENCONTRADOS Y CORREGIDOS
+1. **`dropbox/msg` era HTML roto** (capturado mal en auditoría) → reemplazado con `styles.cpp` real
+2. **`plus.ltmcgh.site/ChumoGH/msg`** → mismo fix
+3. **`latam.sh` wrapper buscaba `./menu.sh`** (no existe) → corregido a `./menu`
+4. **Falta de archivos de estado** (`v-local.log`, `v-new.log`, `exito`) → ahora se crean en rutas LATAM + ADM
+5. **`setup.sh` llamaba a pack_new local inexistente** → ahora dominio + fallback GitHub
+6. **README exponía endpoints del API** → ocultados, ahora dice "contactar @gatesccn"
+
+### PRUEBAS REALES EJECUTADAS
+- ✅ **LATAM:** instalado, menú carga, key consumida, creditos = creator de la key
+- ✅ **SETUP (ADM CGH):** instalado, menú carga con banner ChumoGH + By LatamSRC
+- ✅ **Desinstalación LATAM:** limpia (`rm -rf /etc/SCRIPT-LATAM`)
+
+### ⚠️ IMPORTANTE: CACHÉ de raw.githubusercontent
+GitHub actualiza los archivos pero `raw.githubusercontent.com` tiene **5-10 min de caché**.
+Si un `.sh` parece viejo, esperar o añadir `?nocache=<timestamp>`.
+
+### COMANDOS FINALES PARA CLIENTE
+```bash
+# ADM CGH
+apt update -y; apt upgrade -y
+wget -q https://chumoadmin.arcando.cloud/bash/setup.sh -O setup.sh
+chmod 777 setup.sh && ./setup.sh --key LatamSRC--XXXX
+
+# LATAM (variante NetVPS)
+apt update -y; apt upgrade -y
+wget -q https://chumoadmin.arcando.cloud/bash/latam.sh -O /usr/bin/LATAM
+chmod +x /usr/bin/LATAM
+LATAM --key LatamSRC--XXXX
+```
+
+### PENDIENTE
+1. Subir `bash/modules/` (módulos del menú) al CyberPanel en `/bash/modules/`.
+2. Probar `setup.sh` completo sin cortar por timeout (tarda ~4 min por npm/nodejs).
