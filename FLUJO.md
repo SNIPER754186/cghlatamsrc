@@ -46,9 +46,7 @@ Hay **2 instaladores** y **1 menú** y **1 capa 2 (pack)**. Aquí queda claro qu
        |                       |-- crea /etc/adm-lite/menu (el panel)
        |
        |-- (3) DESCARGA MODULOS DEL MENU (lista-arq)
-       desde GitHub raw
-       
-       |        https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/refs/heads/main/CHUMOPLUS/mirror/github-extra/ChumoGH-ChumoGH-Script-master/lista-arq
+       |        https://chumoadmin.arcando.cloud/bash/modules/<archivo>
        |
        v
    [FIN] Escribir "menu" en la terminal -> panel instalado
