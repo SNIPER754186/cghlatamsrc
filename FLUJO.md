@@ -94,7 +94,7 @@ Hay **2 instaladores** y **1 menú** y **1 capa 2 (pack)**. Aquí queda claro qu
 
 ## 5. ¿Por qué ya no hay IPs fijas?
 
-**Antes (MAL):** El `setup.sh` apuntaba a `http://64.176.5.61:81/...`
+**Antes (MAL):** El `setup.sh` apuntaba a `http://<IP-FIJA>:81/...`
 → Si esa VPS se caía o cambiaba, **todas las instalaciones del mundo se rompían**.
 
 **Ahora (BIEN):** Todo apunta al **dominio** `https://chumoadmin.arcando.cloud/...`

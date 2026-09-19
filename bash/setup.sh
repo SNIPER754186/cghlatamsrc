@@ -366,10 +366,13 @@ echo "$clean_input" > /etc/cghkey
 echo "$clean_input | $IiP | $IP" > /etc/chekKEY
 
 # Ejecutar instalador real (Capa 2: pack_new)
-if [[ -f "/root/cghlatamsrc/4_INSTALACION/build/pack_new_latamsrc.sh" ]]; then
-    bash "/root/cghlatamsrc/4_INSTALACION/build/pack_new_latamsrc.sh"
-else
-    bash -c "$(wget -qO- --no-cache --no-check-certificate --max-redirect=20 https://chumoadmin.arcando.cloud/bash/pack_new.sh)"
+# 1) CyberPanel (/bash/pack_new.sh)  2) GitHub raw (bash/pack_new.sh)
+PACK_OK=0
+if bash -c "$(wget -qO- --no-cache --no-check-certificate --max-redirect=20 --tries=1 --timeout=15 https://${KEYGEN_DOMAIN}/bash/pack_new.sh)" 2>/dev/null; then
+    PACK_OK=1
+fi
+if [[ $PACK_OK -eq 0 ]]; then
+    bash -c "$(wget -qO- --no-cache --no-check-certificate --max-redirect=20 --tries=1 --timeout=15 https://raw.githubusercontent.com/SNIPER754186/cghlatamsrc/main/bash/pack_new.sh)"
 fi
 rm -rf /tmp/* &>/dev/null
 }

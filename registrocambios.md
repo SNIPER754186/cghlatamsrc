@@ -1,8 +1,8 @@
 # Registro de Cambios - Proyecto cghlatamsrc
 **Owner:** @gatesccn | **Creador original del script:** Henry Chumo (@ChumoGH)
 **Fecha:** 19/09/2026
-**VPS Instalador:** 64.176.5.61 (paanelfree)
-**VPS Keygen Central (CyberPanel SQL):** 185.194.204.159 / chumoadmin.arcando.cloud
+**Repo/Instaladores:** dominio `chumoadmin.arcando.cloud`
+**VPS Keygen Central:** CyberPanel (SQL) en `chumoadmin.arcando.cloud`
 
 ---
 
@@ -32,12 +32,12 @@
 
 | Instalador | Ruta pública | Estado |
 | :--- | :--- | :--- |
-| ADM CGH (principal) | `http://64.176.5.61:81/setup.sh` | Adaptado API SQL + TERM OK |
-| LATAM (variante) | `http://64.176.5.61:81/latam.sh` | Adaptado API SQL + TERM OK |
+| ADM CGH (principal) | `chumoadmin.arcando.cloud/bash/setup.sh` | Adaptado API SQL |
+| LATAM (variante) | `chumoadmin.arcando.cloud/bash/latam.sh` | Adaptado API SQL |
 
 **Comando de instalación para cliente:**
 ```bash
-bash <(curl -sSL http://64.176.5.61:81/setup.sh) --key LatamSRC--XXXX
+wget -q https://chumoadmin.arcando.cloud/bash/setup.sh -O setup.sh && ./setup.sh --key LatamSRC--XXXX
 ```
 
 ---
@@ -56,7 +56,7 @@ Política: key de 4h, 1 solo uso, IP consumida registrada en `used_by_ip`.
 ## SESIÓN 19/09/2026 (tarde) — Reestructuración Anti-IP-Fija
 
 ### Problema detectado
-Los instaladores apuntaban a `http://64.176.5.61:81/...` y a `185.194.204.159`.
+Los instaladores apuntaban a IPs fijas de la VPS.
 Si cambiaba de VPS, **todas las instalaciones del mundo se rompían.**
 
 ### Solución aplicada

@@ -129,7 +129,7 @@ rm -f $HOME/lista-arq
 # 8. Wrappers ejecutables de menu
 cat << 'WRAP_EOF' > /usr/bin/menu
 #!/bin/bash
-cd /etc/SCRIPT-LATAM && ./menu.sh
+cd /etc/SCRIPT-LATAM && ./menu
 WRAP_EOF
 chmod +x /usr/bin/menu
 cp -f /usr/bin/menu /usr/bin/MENU
