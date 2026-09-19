@@ -126,6 +126,15 @@ echo "$KEY_CREATOR" > /bin/ejecutar/menu_credito
 echo "chumoadmin.arcando.cloud" > /usr/bin/vendor_code
 rm -f $HOME/lista-arq
 
+# 7b. Archivos de estado que el menu espera (evita "No such file")
+mkdir -p /bin/ejecutar
+echo "0" > /bin/ejecutar/uskill
+echo "V2.5.0" > /etc/SCRIPT-LATAM/v-local.log
+echo "V2.5.0" > /bin/ejecutar/v-new.log
+echo "Verified ${KEY_CREATOR}" > /bin/ejecutar/exito
+echo "$KEY_CREATOR" > /bin/ejecutar/menu_credito
+echo "$(hostname -I 2>/dev/null | awk '{print $1}')" > /bin/ejecutar/IPcgh 2>/dev/null || true
+
 # 8. Wrappers ejecutables de menu
 cat << 'WRAP_EOF' > /usr/bin/menu
 #!/bin/bash

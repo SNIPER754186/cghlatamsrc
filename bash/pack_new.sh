@@ -204,6 +204,8 @@ echo -e 'source /etc/ADMcgh/bashrc' >> /etc/bash.bashrc
 fi
 [[ -e $HOME/lista ]] && rm $HOME/lista
 echo -e "0" > /bin/ejecutar/uskill
+echo "V2.5.0" > /etc/adm-lite/v-local.log 2>/dev/null || true
+echo "V2.5.0" > /bin/ejecutar/v-new.log 2>/dev/null || true
 [[ -e /bin/ejecutar/menu_credito ]] && echo "" || echo "$(cat /etc/adm-lite/menu_credito|head -1)" > /bin/ejecutar/menu_credito && chmod +x /bin/ejecutar/menu_credito
 echo "Verified${TtfIn} $(cat /bin/ejecutar/menu_credito)" > /bin/ejecutar/exito
 print_center -verd "CREDITOS AGREGADOS EXITOSAMENTE"
